@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button } from 'reactbulma'
+import { Button, Image } from 'reactbulma'
 
 
 class Profile extends Component {
@@ -7,22 +7,42 @@ class Profile extends Component {
 		user: null
 	}
 	getNextUser = () => {
-		fetch('https"//randomuser.me/api/')
+
+		this.setState({
+			user: null
+		})
+
+		fetch('https://randomuser.me/api/')
 		.then((response) => {
 			return response.json()
 		}).then(users => {
-
+			console.log(users.results[0].name.first)
+			this.setState({
+				user: users.results[0]
+			})
+			this.props.incrementViewed()
 		})
 		
 	}
     render() {
-  		return (
-  		<div>
-  			<p>Profile!</p>
-  			<button info>Next</button>
-  		</div>
+     const { user } = this.state
+  	  return (
+	  	 <div>
+	  		{!user ? (<p>Loading...</p>) : (
+	  			<div>
+	  			<Image is="128x128" src={user.picture.medium} />
+	  			<p>{ user.name.first }</p>	
+	  			{this.props.viewed < this.props.maxViews && <Button info onClick={this.getNextUser}>Next</Button> }
+	  	    </div>
+	  		)}
+	  	</div>
     );
   }
-}
 
+
+	componentDidMount() {
+		this.getNextUser()
+	}
+
+}
 export default Profile;
