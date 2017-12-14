@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { Button, Image } from 'reactbulma'
+import { Button, Image, Progress } from 'reactbulma'
 
 
 class Profile extends Component {
 	state = {
+		gamble: true,
 		user: null
 	}
 	getNextUser = () => {
@@ -24,15 +25,24 @@ class Profile extends Component {
 		})
 		
 	}
+
+	randomGamble = () => {
+		this.setState({
+			gamble: false
+		})
+	}
+
     render() {
      const { user } = this.state
   	  return (
 	  	 <div>
 	  		{!user ? (<p>Loading...</p>) : (
 	  			<div>
+	  			<Progress info value={this.props.viewed} max={this.props.maxViews}>{this.props.viewed}%</Progress>
 	  			<Image is="128x128" src={user.picture.medium} />
 	  			<p>{ user.name.first }</p>	
 	  			{this.props.viewed < this.props.maxViews && <Button info onClick={this.getNextUser}>Next</Button> }
+	  			{ this.state.gamble && <Button onClick={this.randomGamble()}>Gamble</Button> }
 	  	    </div>
 	  		)}
 	  	</div>
